@@ -49,7 +49,7 @@ Refer to technology-specific instruction files:
 - Create reusable components for common UI patterns
 - Keep components focused on a single responsibility
 - Use props for configuration, not duplication
-- Document component APIs with TypeScript types
+- Document reusable component APIs with typed `Props` interfaces and TSDoc/JSDoc that explains each prop's purpose, optional behavior, and default
 
 ## Development Workflow
 
