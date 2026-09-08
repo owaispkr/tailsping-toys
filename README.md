@@ -65,13 +65,17 @@ npm run test:e2e    # Playwright E2E tests (builds + previews the static site fi
 
 ## Linting
 
-The frontend uses ESLint to enforce code quality across TypeScript and Astro files. Run it with:
+The project uses ESLint to enforce code quality across TypeScript and Astro files, including the documented TypeScript formatting conventions. Run it with:
 
 ```bash
 npm run lint
 ```
 
 ESLint is also run automatically in CI on pull requests to `main`.
+
+## Coding standards
+
+Repository-wide guidance lives in [`.github/instructions/coding-standards.instructions.md`](.github/instructions/coding-standards.instructions.md), with technology-specific details in the other [instruction files](.github/instructions/). In particular, comments should explain intent and non-obvious decisions rather than restating code. Exported data-layer functions require TSDoc/JSDoc for their purpose, parameters, and return value, and reusable Astro components must document their `Props` contracts.
 
 ## Type checking
 
