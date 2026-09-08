@@ -1,14 +1,32 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import GameCard from '../components/GameCard.astro';
+import GameFilters from '../components/GameFilters.astro';
 import PageHero from '../components/PageHero.astro';
 import EmptyState from '../components/EmptyState.astro';
 import { getDatabase } from '../lib/db';
 import { getAllGames } from '../lib/games';
+import type { Category, Publisher } from '../types/game';
 
 export const prerender = true;
 
 const games = await getAllGames(getDatabase());
+const categoriesById = new Map<number, Category>();
+const publishersById = new Map<number, Publisher>();
+
+for (const game of games) {
+  if (game.category) {
+    categoriesById.set(game.category.id, game.category);
+  }
+  if (game.publisher) {
+    publishersById.set(game.publisher.id, game.publisher);
+  }
+}
+
+const categoryOptions = [...categoriesById.values()]
+  .sort((a, b) => a.name.localeCompare(b.name));
+const publisherOptions = [...publishersById.values()]
+  .sort((a, b) => a.name.localeCompare(b.name));
 ---
 
 <Layout title="Tailspin Toys - Crowdfunding your new favorite game!">
@@ -24,9 +42,23 @@ const games = await getAllGames(getDatabase());
       {games.length === 0 ? (
         <EmptyState text="No games available at the moment." />
       ) : (
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" data-testid="games-grid">
-          {games.map((game) => <GameCard game={game} />)}
-        </div>
+        <>
+          <GameFilters
+            categories={categoryOptions}
+            publishers={publisherOptions}
+            totalGames={games.length}
+          />
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" data-testid="games-grid">
+            {games.map((game) => <GameCard game={game} />)}
+          </div>
+          <div
+            class="text-center py-12 bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700"
+            data-testid="filtered-empty-state"
+            hidden
+          >
+            <p class="text-slate-300">No games match the selected filters.</p>
+          </div>
+        </>
       )}
     </div>
   </div>
